@@ -19,7 +19,7 @@ Get your first MCP server running in under 5 minutes!
 
 ```bash
 # Clone this repository (or download the ZIP)
-git clone https://github.com/networkchuck/docker-mcp-tutorial.git
+git clone https://github.com/thenetworkchuck/docker-mcp-tutorial.git
 cd docker-mcp-tutorial
 
 # Navigate to the dice roller example
