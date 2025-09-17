@@ -22,7 +22,7 @@ Get your first MCP server running in under 5 minutes:
 # Settings → Beta Features → Enable "Docker MCP Toolkit"
 
 # 3. Clone this repository
-git clone https://github.com/networkchuck/docker-mcp-tutorial.git
+git clone https://github.com/theNetworkChuck/docker-mcp-tutorial.git
 cd docker-mcp-tutorial
 
 # 4. Build the dice roller example
