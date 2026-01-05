@@ -9,7 +9,7 @@ tags:
 
   
 
-# NetworkChuck's MCP Server Builder Prompt
+#MCP Server Builder Prompt
 
   
 
