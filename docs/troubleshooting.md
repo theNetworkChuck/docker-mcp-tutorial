@@ -5,6 +5,7 @@ Common issues and solutions for Docker MCP servers.
 ## Quick Diagnostics
 
 Run these commands first:
+
 ```bash
 # Check Docker is running
 docker ps
@@ -27,6 +28,7 @@ docker images | grep mcp
 ### 🔴 Tools Not Appearing in Claude
 
 **Symptoms:**
+
 - MCP gateway shows in Claude but no tools
 - Tools were working but disappeared
 - Some tools show but not others
@@ -39,30 +41,38 @@ docker images | grep mcp
    - Relaunch Claude
 
 2. **Check Docker image exists:**
+
    ```bash
    docker images | grep your-server-name
    ```
+
    If missing, rebuild:
+
    ```bash
    docker build -t your-server-name .
    ```
 
 3. **Verify catalog entry:**
+
    ```bash
    cat ~/.docker/mcp/catalogs/custom.yaml
    ```
+
    Check for:
    - Correct image name
    - Tools list populated
    - No syntax errors
 
 4. **Check registry:**
+
    ```bash
    cat ~/.docker/mcp/registry.yaml
    ```
+
    Ensure your server is listed under `registry:` key
 
 5. **Validate Claude config:**
+
    ```bash
    # macOS
    cat ~/Library/Application\ Support/Claude/claude_desktop_config.json
@@ -70,11 +80,13 @@ docker images | grep mcp
    # Windows
    type %APPDATA%\Claude\claude_desktop_config.json
    ```
+
    Look for custom catalog in args
 
 ### 🔴 Docker MCP Toolkit Not Available
 
 **Symptoms:**
+
 - No MCP option in Docker Desktop settings
 - `docker mcp` command not found
 
@@ -96,6 +108,7 @@ docker images | grep mcp
 ### 🔴 Build Failures
 
 **Symptoms:**
+
 - `docker build` fails with errors
 - Package installation fails
 - Dockerfile syntax errors
@@ -103,6 +116,7 @@ docker images | grep mcp
 **Solutions:**
 
 1. **Check Dockerfile syntax:**
+
    ```dockerfile
    # Correct
    FROM python:3.11-slim
@@ -112,6 +126,7 @@ docker images | grep mcp
    ```
 
 2. **Network issues:**
+
    ```bash
    # Build with no cache
    docker build --no-cache -t server-name .
@@ -121,6 +136,7 @@ docker images | grep mcp
    ```
 
 3. **Requirements issues:**
+
    ```bash
    # Test requirements locally
    pip install -r requirements.txt
@@ -129,6 +145,7 @@ docker images | grep mcp
 ### 🔴 Authentication Errors
 
 **Symptoms:**
+
 - API calls failing with 401/403
 - "Token not configured" errors
 - Secret not found
@@ -136,11 +153,13 @@ docker images | grep mcp
 **Solutions:**
 
 1. **Check secret is set:**
+
    ```bash
    docker mcp secret list
    ```
 
 2. **Set secret correctly:**
+
    ```bash
    docker mcp secret set API_KEY="your-actual-key"
    ```
@@ -151,6 +170,7 @@ docker images | grep mcp
    - Names must match exactly!
 
 4. **Test locally:**
+
    ```bash
    export API_KEY="your-key"
    python your_server.py
@@ -159,6 +179,7 @@ docker images | grep mcp
 ### 🔴 Container Crashes
 
 **Symptoms:**
+
 - Tools appear but don't work
 - "Server error" messages
 - Container exits immediately
@@ -166,6 +187,7 @@ docker images | grep mcp
 **Solutions:**
 
 1. **Check logs:**
+
    ```bash
    # Find container ID
    docker ps -a | grep your-server
@@ -175,6 +197,7 @@ docker images | grep mcp
    ```
 
 2. **Test server directly:**
+
    ```bash
    # Run interactively
    docker run -it your-server-name /bin/bash
@@ -192,6 +215,7 @@ docker images | grep mcp
 ### 🔴 Permission Errors
 
 **Symptoms:**
+
 - "Permission denied" errors
 - Cannot access Docker socket
 - Cannot write files
@@ -199,11 +223,13 @@ docker images | grep mcp
 **Solutions:**
 
 1. **Fix Docker socket (Linux/Mac):**
+
    ```bash
    sudo chmod 666 /var/run/docker.sock
    ```
 
 2. **Add user to docker group:**
+
    ```bash
    sudo usermod -aG docker $USER
    newgrp docker
@@ -217,6 +243,7 @@ docker images | grep mcp
 ### 🔴 Gateway Connection Issues
 
 **Symptoms:**
+
 - SSE transport not working
 - Cannot connect remotely
 - n8n integration failing
@@ -224,6 +251,7 @@ docker images | grep mcp
 **Solutions:**
 
 1. **Check port is open:**
+
    ```bash
    # Is gateway running?
    docker ps | grep mcp-gateway
@@ -233,6 +261,7 @@ docker images | grep mcp
    ```
 
 2. **Firewall issues:**
+
    ```bash
    # macOS
    sudo pfctl -d  # Disable firewall temporarily
@@ -242,6 +271,7 @@ docker images | grep mcp
    ```
 
 3. **Correct startup command:**
+
    ```bash
    docker run -p 8811:8811 docker/mcp-gateway --transport sse
    ```
@@ -251,17 +281,21 @@ docker images | grep mcp
 ### macOS
 
 **Apple Silicon Issues:**
+
 - Some images need platform flag:
+
   ```bash
   docker build --platform linux/amd64 -t server .
   ```
 
 **Permissions:**
+
 - Grant Docker full disk access in System Preferences
 
 ### Windows
 
 **WSL 2 Issues:**
+
 ```powershell
 # Check WSL version
 wsl --status
@@ -274,12 +308,14 @@ wsl --set-default-version 2
 ```
 
 **Path Issues:**
+
 - Use double backslashes in JSON configs
 - Or use forward slashes
 
 ### Linux
 
 **Docker Daemon:**
+
 ```bash
 # Check status
 sudo systemctl status docker
@@ -294,6 +330,7 @@ sudo systemctl enable docker
 ## Debug Commands
 
 ### Verbose Logging
+
 ```bash
 # Build with verbose output
 docker build --progress=plain -t server .
@@ -303,6 +340,7 @@ DEBUG=true python server.py
 ```
 
 ### Test MCP Protocol
+
 ```bash
 # List tools
 echo '{"jsonrpc":"2.0","method":"tools/list","id":1}' | python server.py
@@ -312,6 +350,7 @@ echo '{"jsonrpc":"2.0","method":"tools/call","params":{"name":"tool_name","argum
 ```
 
 ### Clean Slate
+
 ```bash
 # Remove all MCP images
 docker images | grep mcp | awk '{print $3}' | xargs docker rmi
@@ -326,28 +365,34 @@ cd your-server && docker build -t your-server .
 ## Error Messages Explained
 
 **"Gateway panic"**
+
 - Usually a syntax error in server code
 - Check for multi-line docstrings (use single-line only)
 
 **"No such image"**
+
 - Docker image not built
 - Wrong image name in catalog
 
 **"Transport error"**
+
 - MCP protocol issue
 - Check JSON formatting
 
 **"Tool not found"**
+
 - Tool not decorated with @mcp.tool()
 - Tool not listed in catalog
 
 **"Invalid parameters"**
+
 - Type hints too complex
 - Use simple string parameters
 
 ## Getting Help
 
 ### Logs to Collect
+
 1. Docker Desktop version: `docker --version`
 2. Claude logs: Help → Show Logs
 3. Container logs: `docker logs [container]`
@@ -355,6 +400,7 @@ cd your-server && docker build -t your-server .
 5. Catalog and registry files
 
 ### Where to Get Help
+
 - GitHub Issues on this repo
 - Docker Community Forums
 - NetworkChuck Discord
@@ -363,6 +409,7 @@ cd your-server && docker build -t your-server .
 ## Prevention Tips
 
 1. **Always test locally first:**
+
    ```bash
    python your_server.py
    ```

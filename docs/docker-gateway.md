@@ -13,7 +13,7 @@ The Docker MCP Gateway is a special MCP server that acts as a proxy/orchestrator
 
 ## Architecture Overview
 
-```
+```text
        Claude/Cursor/LM Studio
                 ↓
          [Single Connection]
@@ -28,18 +28,23 @@ The Docker MCP Gateway is a special MCP server that acts as a proxy/orchestrator
 ## Key Benefits
 
 ### 1. Simplified Configuration
+
 **Without Gateway:**
+
 - Configure each server individually
 - Manage multiple connections
 - Update each client separately
 
 **With Gateway:**
+
 - One configuration entry
 - Single connection point
 - Centralized management
 
 ### 2. Dynamic Container Management
+
 Containers run only when needed:
+
 ```bash
 # Before tool use
 $ docker ps
@@ -57,6 +62,7 @@ $ docker ps
 ```
 
 ### 3. Centralized Secret Management
+
 ```bash
 # Set secrets once, use everywhere
 docker mcp secret set API_KEY="abc123"
@@ -68,20 +74,26 @@ os.environ.get("API_KEY")
 ## Transport Modes
 
 ### Standard I/O (Local)
+
 Default mode for local clients:
+
 ```bash
 docker mcp gateway run --transport stdio
 ```
+
 - Direct process communication
 - No network overhead
 - Maximum security
 - Perfect for desktop apps
 
 ### Server-Sent Events (Network)
+
 For remote access and automation:
+
 ```bash
 docker mcp gateway run --transport sse --port 8811
 ```
+
 - HTTP/HTTPS transport
 - Access from anywhere
 - Integration with n8n, Make, Zapier
@@ -90,7 +102,9 @@ docker mcp gateway run --transport sse --port 8811
 ## Running the Gateway
 
 ### As Part of Docker Desktop
+
 Automatically managed when MCP Toolkit is enabled:
+
 ```json
 {
   "mcpServers": {
@@ -112,7 +126,9 @@ Automatically managed when MCP Toolkit is enabled:
 ```
 
 ### Standalone Container
+
 Run independently for production:
+
 ```bash
 # Pull the gateway image
 docker pull docker/mcp-gateway
@@ -131,6 +147,7 @@ docker run -d \
 ## Catalog System
 
 ### Structure
+
 ```yaml
 version: 2
 name: custom
@@ -150,6 +167,7 @@ registry:
 ```
 
 ### Multiple Catalogs
+
 ```bash
 # Load multiple catalogs
 docker mcp gateway run \
@@ -161,6 +179,7 @@ docker mcp gateway run \
 ## Registry Management
 
 The registry tracks installed servers:
+
 ```yaml
 registry:
   dice:
@@ -172,6 +191,7 @@ registry:
 ```
 
 Manage via CLI:
+
 ```bash
 # List registered servers
 docker mcp server list
@@ -186,6 +206,7 @@ docker mcp server remove my-server
 ## Remote Access Setup
 
 ### Local Network Access
+
 ```bash
 # Start gateway with network transport
 docker run -d \
@@ -201,6 +222,7 @@ http://192.168.1.100:8811
 ```
 
 ### n8n Integration
+
 As shown in the video:
 
 1. Start gateway with SSE transport
@@ -210,6 +232,7 @@ As shown in the video:
 5. Build automation workflows!
 
 ### Security Considerations
+
 - Use HTTPS in production
 - Implement authentication
 - Restrict network access
@@ -218,11 +241,13 @@ As shown in the video:
 ## Advanced Configuration
 
 ### Custom Port
+
 ```bash
 docker mcp gateway run --transport sse --port 9000
 ```
 
 ### Custom Config Path
+
 ```bash
 docker mcp gateway run \
   --config=/custom/path/config.yaml \
@@ -230,6 +255,7 @@ docker mcp gateway run \
 ```
 
 ### Environment Variables
+
 ```bash
 docker run -e DEBUG=true \
   -e LOG_LEVEL=debug \
@@ -239,7 +265,9 @@ docker run -e DEBUG=true \
 ## Performance Optimization
 
 ### Container Caching
+
 First run pulls image, subsequent runs are instant:
+
 ```bash
 # Pre-pull images for faster first run
 docker pull dice-mcp-server
@@ -247,6 +275,7 @@ docker pull weather-mcp-server
 ```
 
 ### Resource Limits
+
 ```yaml
 # In catalog definition
 registry:
@@ -261,6 +290,7 @@ registry:
 ## Monitoring & Debugging
 
 ### View Gateway Logs
+
 ```bash
 # If running as container
 docker logs mcp-gateway
@@ -270,12 +300,14 @@ docker logs $(docker ps | grep mcp-gateway | awk '{print $1}')
 ```
 
 ### List Active Connections
+
 ```bash
 # See what's currently running
 docker ps | grep mcp
 ```
 
 ### Debug Mode
+
 ```bash
 docker mcp gateway run --transport stdio --debug
 ```
@@ -283,16 +315,19 @@ docker mcp gateway run --transport stdio --debug
 ## Troubleshooting
 
 ### Gateway Won't Start
+
 - Check Docker daemon is running
 - Verify socket permissions
 - Ensure no port conflicts (for SSE mode)
 
 ### Servers Not Available
+
 - Verify catalog syntax
 - Check registry entries
 - Ensure Docker images exist
 
 ### Connection Issues
+
 - Check firewall rules
 - Verify network settings
 - Test with curl: `curl http://localhost:8811/health`
@@ -317,6 +352,7 @@ docker mcp gateway run --transport stdio --debug
 ## Future Possibilities
 
 As mentioned in the video:
+
 - Cloud-hosted gateways
 - Multi-user support
 - Tool marketplace
