@@ -5,6 +5,7 @@ Learn how to create your own MCP servers from scratch using NetworkChuck's MCP B
 ## Overview
 
 MCP servers are Docker containers that expose tools to AI assistants. You can build servers for:
+
 - API integrations (weather, stocks, databases)
 - System tools (file management, network utilities)
 - Custom business logic
@@ -15,6 +16,7 @@ MCP servers are Docker containers that expose tools to AI assistants. You can bu
 ### Step 1: Prepare Your Requirements
 
 Before using the prompt, gather:
+
 1. **Service name** - What will you call your server?
 2. **API documentation** - Links to any APIs you'll use
 3. **Tool list** - What specific functions do you need?
@@ -31,6 +33,7 @@ Before using the prompt, gather:
 ### Step 3: Generate Your Server
 
 The AI will create 5 files:
+
 - `Dockerfile` - Container configuration
 - `requirements.txt` - Python dependencies  
 - `[name]_server.py` - Main server code
@@ -39,8 +42,9 @@ The AI will create 5 files:
 
 ## Example: Weather MCP Server
 
-### Input to the Prompt:
-```
+### Input to the Prompt
+
+```text
 I want to build a weather MCP server that:
 - Gets current weather for any city
 - Gets 5-day forecast
@@ -48,7 +52,8 @@ I want to build a weather MCP server that:
 - Uses the OpenWeatherMap API
 ```
 
-### Generated Structure:
+### Generated Structure
+
 ```python
 @mcp.tool()
 async def get_weather(city: str = "") -> str:
@@ -60,39 +65,47 @@ async def get_weather(city: str = "") -> str:
 ## Building Process
 
 ### 1. Create Project Directory
+
 ```bash
 mkdir weather-mcp-server
 cd weather-mcp-server
 ```
 
 ### 2. Save Generated Files
+
 Save all 5 files from the AI output
 
 ### 3. Build Docker Image
+
 ```bash
 docker build -t weather-mcp-server .
 ```
 
 ### 4. Add Secrets (if needed)
+
 ```bash
 docker mcp secret set OPENWEATHER_API_KEY="your-key-here"
 ```
 
 ### 5. Register in Catalog
+
 Add to `~/.docker/mcp/catalogs/custom.yaml`
 
 ### 6. Update Registry
+
 Add to `~/.docker/mcp/registry.yaml`
 
 ### 7. Configure Client
+
 Update Claude/Cursor configuration
 
 ### 8. Test
+
 Restart client and test your new tools!
 
 ## Server Architecture
 
-```
+```text
 Client (Claude/Cursor)
         ↓
 Docker MCP Gateway
@@ -105,18 +118,21 @@ External APIs/Services
 ## Best Practices
 
 ### Code Structure
+
 - One tool per function
 - Clear, single-line docstrings
 - Comprehensive error handling
 - Informative return messages
 
 ### Security
+
 - Never hardcode credentials
 - Use Docker secrets for API keys
 - Validate all inputs
 - Run as non-root user
 
 ### Performance
+
 - Add timeouts to API calls
 - Cache responses when appropriate
 - Use async operations
@@ -125,6 +141,7 @@ External APIs/Services
 ## Common Patterns
 
 ### API Integration
+
 ```python
 async with httpx.AsyncClient() as client:
     response = await client.get(url, headers=headers)
@@ -133,6 +150,7 @@ async with httpx.AsyncClient() as client:
 ```
 
 ### File Operations
+
 ```python
 try:
     with open(filename, 'r') as f:
@@ -143,6 +161,7 @@ except FileNotFoundError:
 ```
 
 ### Command Execution
+
 ```python
 result = subprocess.run(
     command,
@@ -156,19 +175,25 @@ return result.stdout if result.returncode == 0 else result.stderr
 ## Advanced Topics
 
 ### Multi-Tool Servers
+
 Combine related tools in one server:
+
 - Database operations (create, read, update, delete)
 - Project management (tasks, projects, time tracking)
 - DevOps tools (deploy, monitor, scale)
 
 ### Stateful Operations
+
 While MCP is stateless, you can:
+
 - Use external databases
 - Write to files
 - Maintain sessions via IDs
 
 ### Complex Workflows
+
 Chain tools together:
+
 1. Fetch data from API
 2. Process/transform data
 3. Store results
@@ -177,6 +202,7 @@ Chain tools together:
 ## Debugging
 
 ### Local Testing
+
 ```bash
 # Run server directly
 python your_server.py
@@ -186,12 +212,14 @@ echo '{"jsonrpc":"2.0","method":"tools/list","id":1}' | python your_server.py
 ```
 
 ### Check Logs
+
 ```bash
 # View container logs
 docker logs $(docker ps -a | grep your-server | awk '{print $1}')
 ```
 
 ### Common Issues
+
 - **Import errors**: Check requirements.txt
 - **Tool not found**: Verify @mcp.tool() decorator
 - **Auth failures**: Check secret names match
@@ -199,12 +227,14 @@ docker logs $(docker ps -a | grep your-server | awk '{print $1}')
 ## Examples from the Video
 
 ### Toggl Timer Integration
+
 - Start/stop timers
 - View time entries
 - Track projects
 - API authentication with tokens
 
 ### Kali Linux Tools
+
 - Network scanning (nmap)
 - Web testing (nikto, dirb)
 - Security assessments

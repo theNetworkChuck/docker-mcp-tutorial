@@ -3,6 +3,7 @@
 Detailed platform-specific instructions for setting up Docker MCP servers.
 
 ## Table of Contents
+
 - [macOS Installation](#macos-installation)
 - [Windows Installation](#windows-installation)
 - [Linux Installation](#linux-installation)
@@ -55,6 +56,7 @@ Add the MCP gateway configuration (see Quick Start guide for details).
 ## Windows Installation
 
 ### Prerequisites
+
 - Windows 10 64-bit: Pro, Enterprise, or Education (Build 19041 or higher)
 - Windows 11 64-bit: Home, Pro, Enterprise, or Education
 
@@ -107,6 +109,7 @@ notepad "$env:APPDATA\Claude\claude_desktop_config.json"
 ```
 
 **Important for Windows paths:** Use double backslashes in JSON:
+
 ```json
 "C:\\Users\\YourUsername\\.docker\\mcp"
 ```
@@ -116,6 +119,7 @@ notepad "$env:APPDATA\Claude\claude_desktop_config.json"
 ## Linux Installation
 
 ### Supported Distributions
+
 - Ubuntu 20.04 LTS or later
 - Debian 11 or later
 - Fedora 36 or later
@@ -123,7 +127,8 @@ notepad "$env:APPDATA\Claude\claude_desktop_config.json"
 
 ### Step 1: Install Docker
 
-#### Ubuntu/Debian:
+#### Ubuntu/Debian
+
 ```bash
 # Update package index
 sudo apt-get update
@@ -151,7 +156,8 @@ sudo usermod -aG docker $USER
 newgrp docker
 ```
 
-#### Fedora:
+#### Fedora
+
 ```bash
 # Install Docker
 sudo dnf -y install dnf-plugins-core
@@ -181,6 +187,7 @@ sudo rpm -i docker-desktop-*.rpm
 ### Step 3: Install Claude Desktop
 
 Currently, Claude Desktop requires running through a compatibility layer on Linux. Alternatively, use:
+
 - Cursor IDE with MCP support
 - LM Studio
 - Custom MCP clients
@@ -228,12 +235,14 @@ docker mcp secret list
 ### Test MCP Connection
 
 1. Build a test server:
+
 ```bash
 cd examples/dice-roller
 docker build -t test-mcp .
 ```
 
 2. Check if it appears in Docker:
+
 ```bash
 docker images | grep test-mcp
 ```
@@ -248,16 +257,19 @@ docker images | grep test-mcp
 ### Docker Desktop Won't Start
 
 **macOS:**
+
 - Check System Preferences → Security & Privacy
 - Ensure Docker has necessary permissions
 - Try resetting Docker: Troubleshoot → Reset to factory defaults
 
 **Windows:**
+
 - Ensure virtualization is enabled in BIOS
 - Check WSL 2 is properly installed: `wsl --status`
 - Run as Administrator
 
 **Linux:**
+
 - Check Docker daemon: `sudo systemctl status docker`
 - Verify user is in docker group: `groups`
 
@@ -277,6 +289,7 @@ docker images | grep test-mcp
 ### Permission Errors
 
 **macOS/Linux:**
+
 ```bash
 # Fix Docker socket permissions
 sudo chmod 666 /var/run/docker.sock
@@ -286,17 +299,20 @@ sudo usermod -aG docker $USER
 ```
 
 **Windows:**
+
 - Run Docker Desktop as Administrator
 - Check WSL 2 integration in Docker settings
 
 ### Build Failures
 
 Common causes:
+
 - Network issues downloading packages
 - Dockerfile syntax errors
 - Missing dependencies
 
 Debug with:
+
 ```bash
 # Verbose build output
 docker build --no-cache --progress=plain -t test .
@@ -310,6 +326,7 @@ docker logs [container-id]
 ## Next Steps
 
 ✅ Installation complete? Now:
+
 1. Try the [Quick Start Guide](../quick-start/setup-guide.md)
 2. Build a custom server with the [MCP Builder Prompt](../mcp-builder-prompt/)
 3. Learn about [Docker MCP Gateway](docker-gateway.md)
