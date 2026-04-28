@@ -1,3 +1,5 @@
+[![MseeP.ai Security Assessment Badge](https://mseep.net/pr/thenetworkchuck-docker-mcp-tutorial-badge.png)](https://mseep.ai/app/thenetworkchuck-docker-mcp-tutorial)
+
 # 🚀 Docker MCP Tutorial - Build AI Tools with Docker
 
 [![NetworkChuck](https://img.shields.io/badge/NetworkChuck-YouTube-red)](https://youtube.com/@NetworkChuck)
